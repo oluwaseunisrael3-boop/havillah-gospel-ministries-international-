@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | Havilah Gospel Ministries</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="havilah-icon-small.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --black:#0D0C0B;--charcoal:#161412;--charcoal-2:#1F1C19;
+  --gold:#C8963E;--gold-light:#E0B968;--red:#D62E1F;--red-deep:#A82217;
+  --yellow:#F5C518;--blue:#1E5FBF;--cream:#F4EDE0;--cream-dim:#c9c0ac;
+  --line:rgba(200,150,62,0.18);
+  --font-display:'Playfair Display', serif;--font-body:'Jost', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--black);color:var(--cream);font-family:var(--font-body);line-height:1.6;}
+button{font-family:inherit;cursor:pointer;border:none;}
+::-webkit-scrollbar{width:8px;}
+::-webkit-scrollbar-track{background:var(--black);}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:4px;}
+
+.login-screen{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;
+  background:radial-gradient(ellipse 60% 50% at 50% 0%, rgba(200,150,62,0.1), transparent 60%), var(--black);
+}
+.login-box{
+  background:var(--charcoal-2);border:1px solid var(--line);border-radius:6px;
+  padding:44px 32px;max-width:380px;width:100%;text-align:center;
+}
+.login-box img{width:70px;margin:0 auto 20px;}
+.login-box h1{font-family:var(--font-display);font-size:22px;color:var(--gold);margin-bottom:6px;}
+.login-box p{font-size:13px;color:var(--cream-dim);margin-bottom:26px;}
+.login-box input{
+  width:100%;background:var(--charcoal);border:1px solid var(--line);color:var(--cream);
+  padding:14px;border-radius:4px;font-size:15px;margin-bottom:14px;text-align:center;
+}
+.login-box button{
+  width:100%;background:var(--gold);color:var(--black);padding:14px;border-radius:4px;
+  font-weight:700;font-size:14px;letter-spacing:1px;text-transform:uppercase;
+}
+.login-box button:disabled{opacity:0.6;}
+.login-error{color:#f0776c;font-size:13px;margin-top:12px;min-height:18px;}
+
+.dash{display:none;}
+.dash.active{display:block;}
+.dash-header{
+  background:var(--charcoal);border-bottom:1px solid var(--line);
+  padding:16px 20px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.dash-brand{display:flex;align-items:center;gap:10px;}
+.dash-brand img{height:34px;}
+.dash-brand-text{font-family:var(--font-display);font-weight:700;color:var(--gold);font-size:14px;}
+.dash-brand-text span{display:block;font-size:9px;color:var(--cream-dim);font-weight:400;letter-spacing:1px;}
+.logout-btn{
+  background:var(--charcoal-2);border:1px solid var(--line);color:var(--cream-dim);
+  padding:9px 16px;border-radius:4px;font-size:12px;letter-spacing:0.5px;
+}
+.logout-btn:hover{border-color:var(--red);color:#f0776c;}
+
+.dash-nav{
+  display:flex;gap:4px;overflow-x:auto;padding:12px 16px;background:var(--charcoal);
+  border-bottom:1px solid var(--line);position:sticky;top:61px;z-index:99;
+}
+.dash-nav button{
+  white-space:nowrap;padding:9px 16px;border-radius:20px;font-size:12.5px;font-weight:600;
+  background:var(--charcoal-2);color:var(--cream-dim);border:1px solid var(--line);
+}
+.dash-nav button.active{background:var(--gold);color:var(--black);border-color:var(--gold);}
+
+.dash-body{max-width:900px;margin:0 auto;padding:28px 18px 80px;}
+.dash-panel{display:none;}
+.dash-panel.active{display:block;animation:fadeIn 0.3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+.panel-title{font-family:var(--font-display);font-size:22px;color:var(--cream);}
+
+.card{background:var(--charcoal-2);border:1px solid var(--line);border-radius:6px;padding:22px;margin-bottom:18px;}
+.form-label{font-size:11.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:8px;font-weight:600;}
+.form-input, .form-textarea, .form-select{
+  width:100%;background:var(--charcoal);border:1px solid var(--line);color:var(--cream);
+  padding:13px 14px;border-radius:4px;font-family:inherit;font-size:14.5px;margin-bottom:16px;
+}
+.form-textarea{min-height:140px;resize:vertical;}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:4px;
+  font-weight:700;font-size:13px;letter-spacing:0.8px;text-transform:uppercase;
+}
+.btn-gold{background:var(--gold);color:var(--black);}
+.btn-gold:hover{background:var(--gold-light);}
+.btn-gold:disabled{opacity:0.6;}
+.btn-red{background:var(--red);color:#fff;}
+.btn-red:hover{background:var(--red-deep);}
+.btn-outline{background:transparent;border:1px solid var(--line);color:var(--cream-dim);}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold);}
+.btn-block{width:100%;justify-content:center;}
+.btn-sm{padding:8px 14px;font-size:11px;}
+
+.list-item{
+  background:var(--charcoal-2);border:1px solid var(--line);border-radius:6px;
+  padding:18px 20px;margin-bottom:12px;
+}
+.list-item-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px;}
+.list-item-title{font-family:var(--font-display);font-weight:700;font-size:16.5px;color:var(--cream);}
+.list-item-meta{font-size:12px;color:var(--cream-dim);margin-bottom:10px;}
+.list-item-body{font-size:13.5px;color:var(--cream-dim);margin-bottom:12px;white-space:pre-wrap;}
+.list-item-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.badge{font-size:10.5px;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:20px;background:rgba(200,150,62,0.15);color:var(--gold-light);}
+.badge-prayer{background:rgba(30,95,191,0.15);color:#6fa3f0;}
+.badge-testimony{background:rgba(200,150,62,0.15);color:var(--gold-light);}
+.badge-word{background:rgba(214,46,31,0.15);color:#f0776c;}
+
+.empty-state{text-align:center;padding:50px 20px;color:var(--cream-dim);font-style:italic;}
+
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:28px;}
+.stat-card{background:var(--charcoal-2);border:1px solid var(--line);border-radius:6px;padding:20px;text-align:center;}
+.stat-num{font-family:var(--font-display);font-size:30px;color:var(--gold);}
+.stat-label{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--cream-dim);margin-top:4px;}
+
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{text-align:left;padding:10px 12px;color:var(--gold);font-size:11px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--line);}
+td{padding:12px;border-bottom:1px solid var(--line);color:var(--cream-dim);}
+.table-wrap{overflow-x:auto;background:var(--charcoal-2);border:1px solid var(--line);border-radius:6px;}
+
+.toast{
+  position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);
+  background:var(--gold);color:var(--black);padding:14px 26px;border-radius:30px;
+  font-size:14px;font-weight:600;z-index:3000;transition:transform 0.35s ease;
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.note-box{
+  background:rgba(30,95,191,0.08);border:1px solid rgba(30,95,191,0.3);border-radius:6px;
+  padding:14px 18px;font-size:12.5px;color:#8fb8ec;margin-bottom:20px;
+}
+@media(min-width:600px){
+  .form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .stat-grid{grid-template-columns:repeat(4,1fr);}
+}
+</style>
+</head>
+<body>
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <img src="havilah-icon-small.png" alt="logo">
+    <h1>Admin Login</h1>
+    <p>Havilah Gospel Ministries Int'l</p>
+    <input type="email" id="emailInput" placeholder="Admin email" autocomplete="username">
+    <input type="password" id="passwordInput" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button id="loginBtn" onclick="doLogin()">Log In</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<div class="dash" id="dashScreen">
+  <div class="dash-header">
+    <div class="dash-brand">
+      <img src="havilah-icon-small.png" alt="logo">
+      <div class="dash-brand-text">HAVILAH ADMIN<span>Ministry Dashboard</span></div>
+    </div>
+    <button class="logout-btn" onclick="doLogout()">Log Out</button>
+  </div>
+
+  <div class="dash-nav" id="dashNav">
+    <button class="active" data-panel="overview" onclick="switchPanel('overview', this)">Overview</button>
+    <button data-panel="devotional" onclick="switchPanel('devotional', this)">Devotional</button>
+    <button data-panel="sermons" onclick="switchPanel('sermons', this)">Sermons</button>
+    <button data-panel="events" onclick="switchPanel('events', this)">Events</button>
+    <button data-panel="registrations" onclick="switchPanel('registrations', this)">Registrations</button>
+    <button data-panel="community" onclick="switchPanel('community', this)">Community</button>
+    <button data-panel="members" onclick="switchPanel('members', this)">Members</button>
+  </div>
+
+  <div class="dash-body">
+
+    <div class="dash-panel active" id="panel-overview">
+      <div class="panel-head"><div class="panel-title">Overview</div></div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-num" id="statDevos">0</div><div class="stat-label">Devotionals</div></div>
+        <div class="stat-card"><div class="stat-num" id="statSermons">0</div><div class="stat-label">Sermons</div></div>
+        <div class="stat-card"><div class="stat-num" id="statEvents">0</div><div class="stat-label">Events</div></div>
+        <div class="stat-card"><div class="stat-num" id="statMembers">0</div><div class="stat-label">Members</div></div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-num" id="statRegs">0</div><div class="stat-label">Registrations</div></div>
+        <div class="stat-card"><div class="stat-num" id="statWall">0</div><div class="stat-label">Community Posts</div></div>
+      </div>
+      <div class="note-box">This dashboard is connected live to Supabase. Updates you make here appear instantly for everyone visiting the main site, on any device.</div>
+    </div>
+
+    <div class="dash-panel" id="panel-devotional">
+      <div class="panel-head"><div class="panel-title">Daily Devotional</div></div>
+      <div class="card">
+        <label class="form-label">Title</label>
+        <input class="form-input" id="devoTitle" placeholder="e.g. Walking in Faith Today">
+        <label class="form-label">Scripture (optional)</label>
+        <textarea class="form-textarea" id="devoVerse" style="min-height:70px;" placeholder="e.g. Now faith is the substance of things hoped for..."></textarea>
+        <label class="form-label">Scripture Reference (optional)</label>
+        <input class="form-input" id="devoVerseRef" placeholder="e.g. Hebrews 11:1">
+        <label class="form-label">Devotional Message</label>
+        <textarea class="form-textarea" id="devoBody" placeholder="Write today's devotional..."></textarea>
+        <button class="btn btn-gold btn-block" id="devoSubmitBtn" onclick="postDevotional()">Post Today's Devotional</button>
+      </div>
+      <div id="devoList"></div>
+    </div>
+
+    <div class="dash-panel" id="panel-sermons">
+      <div class="panel-head"><div class="panel-title">Sermons &amp; Teaching</div></div>
+      <div class="card">
+        <label class="form-label">Sermon Title</label>
+        <input class="form-input" id="sermonTitle" placeholder="e.g. The Power of Consistent Prayer">
+        <label class="form-label">Category</label>
+        <input class="form-input" id="sermonCategory" placeholder="e.g. Sunday Service, Bible Study, Crusade">
+        <label class="form-label">YouTube Link</label>
+        <input class="form-input" id="sermonUrl" placeholder="https://youtube.com/watch?v=...">
+        <button class="btn btn-gold btn-block" id="sermonSubmitBtn" onclick="postSermon()">Add Sermon</button>
+      </div>
+      <div id="sermonList"></div>
+    </div>
+
+    <div class="dash-panel" id="panel-events">
+      <div class="panel-head"><div class="panel-title">Programs &amp; Events</div></div>
+      <div class="card">
+        <label class="form-label">Event Title</label>
+        <input class="form-input" id="eventTitle" placeholder="e.g. Annual Camp Meeting 2026">
+        <div class="form-row-2">
+          <div>
+            <label class="form-label">Date</label>
+            <input class="form-input" type="date" id="eventDate">
+          </div>
+          <div>
+            <label class="form-label">Time</label>
+            <input class="form-input" type="text" id="eventTime" placeholder="e.g. 9:00 AM">
+          </div>
+        </div>
+        <label class="form-label">Location</label>
+        <input class="form-input" id="eventLocation" placeholder="e.g. Havilah Gospel Ministries, Ilorin">
+        <label class="form-label">Description</label>
+        <textarea class="form-textarea" id="eventDesc" placeholder="Details about the event..."></textarea>
+        <button class="btn btn-gold btn-block" id="eventSubmitBtn" onclick="postEvent()">Add Event</button>
+      </div>
+      <div id="eventList"></div>
+    </div>
+
+    <div class="dash-panel" id="panel-registrations">
+      <div class="panel-head"><div class="panel-title">Event Registrations</div></div>
+      <div id="regTableWrap"></div>
+    </div>
+
+    <div class="dash-panel" id="panel-community">
+      <div class="panel-head"><div class="panel-title">Community Wall Moderation</div></div>
+      <div id="wallModerationList"></div>
+    </div>
+
+    <div class="dash-panel" id="panel-members">
+      <div class="panel-head"><div class="panel-title">Church Members Registry</div></div>
+      <div class="note-box">This information is private, secured by your admin login, and does not appear anywhere on the main website.</div>
+      <div class="card">
+        <label class="form-label">Full Name</label>
+        <input class="form-input" id="memberName" placeholder="e.g. Sister Grace Adewale">
+        <div class="form-row-2">
+          <div>
+            <label class="form-label">Phone Number</label>
+            <input class="form-input" id="memberPhone" placeholder="e.g. 08012345678">
+          </div>
+          <div>
+            <label class="form-label">Branch (optional)</label>
+            <input class="form-input" id="memberBranch" placeholder="e.g. Ilorin Main">
+          </div>
+        </div>
+        <label class="form-label">Address</label>
+        <textarea class="form-textarea" id="memberAddress" style="min-height:80px;" placeholder="Residential address"></textarea>
+        <button class="btn btn-gold btn-block" id="memberSubmitBtn" onclick="addMember()">Add Member</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Phone</th><th>Address</th><th>Branch</th><th></th></tr></thead>
+          <tbody id="membersTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
