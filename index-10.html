@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Havilah Gospel Ministries Int'l | Pastor Ben Idowu</title>
+<meta name="description" content="Havilah Gospel Ministries International — Elevation Destinies Unto Divine Fulfillment. Daily devotionals, sermons, events, and community with Pastor Ben Idowu.">
+<meta name="theme-color" content="#0D0C0B">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root{
+  --black:#0D0C0B;
+  --charcoal:#161412;
+  --charcoal-2:#1F1C19;
+  --gold:#C8963E;
+  --gold-light:#E0B968;
+  --red:#D62E1F;
+  --red-deep:#A82217;
+  --yellow:#F5C518;
+  --blue:#1E5FBF;
+  --cream:#F4EDE0;
+  --cream-dim:#c9c0ac;
+  --line:rgba(200,150,62,0.18);
+  --font-display:'Playfair Display', serif;
+  --font-body:'Jost', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--black);
+  color:var(--cream);
+  font-family:var(--font-body);
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none;}
+img{max-width:100%;display:block;}
+button{font-family:inherit;cursor:pointer;border:none;}
+::selection{background:var(--gold);color:var(--black);}
+
+::-webkit-scrollbar{width:8px;}
+::-webkit-scrollbar-track{background:var(--black);}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:4px;}
+
+.section{padding:90px 20px;position:relative;}
+.section-inner{max-width:1100px;margin:0 auto;}
+.eyebrow{
+  font-size:12px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold);font-weight:600;margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
+}
+.eyebrow::before{content:'';width:24px;height:1px;background:var(--gold);display:inline-block;}
+h1,h2,h3{font-family:var(--font-display);font-weight:700;letter-spacing:0.3px;}
+.section-title{font-size:clamp(28px,5vw,44px);color:var(--cream);margin-bottom:8px;}
+.section-sub{color:var(--cream-dim);font-size:15px;max-width:520px;margin-bottom:40px;}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 30px;border-radius:2px;font-weight:600;
+  font-size:14px;letter-spacing:1px;text-transform:uppercase;
+  transition:all 0.25s ease;cursor:pointer;
+}
+.btn-gold{background:var(--gold);color:var(--black);}
+.btn-gold:hover{background:var(--gold-light);transform:translateY(-2px);}
+.btn-outline{border:1px solid var(--gold);color:var(--gold);background:transparent;}
+.btn-outline:hover{background:var(--gold);color:var(--black);}
+.btn-red{background:var(--red);color:var(--cream);}
+.btn-red:hover{background:var(--red-deep);transform:translateY(-2px);}
+
+header{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:rgba(13,12,11,0.88);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.nav-wrap{
+  max-width:1200px;margin:0 auto;padding:12px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand img{height:42px;width:auto;}
+.brand-text{font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--gold);line-height:1.1;}
+.brand-text span{display:block;font-family:var(--font-body);font-size:9px;letter-spacing:2px;color:var(--cream-dim);font-weight:400;margin-top:2px;}
+.nav-links{display:none;gap:28px;font-size:13px;letter-spacing:0.5px;font-weight:500;}
+.nav-links a{color:var(--cream-dim);transition:color 0.2s;position:relative;}
+.nav-links a:hover{color:var(--gold);}
+.nav-actions{display:flex;align-items:center;gap:10px;}
+.icon-btn{
+  width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--charcoal-2);border:1px solid var(--line);
+  transition:all 0.2s;
+}
+.icon-btn:hover{border-color:var(--gold);}
+.icon-btn svg{width:17px;height:17px;}
+.burger{display:flex;flex-direction:column;gap:4px;width:38px;height:38px;align-items:center;justify-content:center;background:none;border:none;}
+.burger span{width:20px;height:2px;background:var(--gold);border-radius:2px;transition:0.3s;}
+
+.mobile-menu{
+  position:fixed;top:0;right:-100%;width:78%;max-width:340px;height:100vh;
+  background:var(--charcoal);z-index:1001;transition:right 0.35s ease;
+  padding:26px 24px;overflow-y:auto;border-left:1px solid var(--line);
+}
+.mobile-menu.open{right:0;}
+.mobile-menu-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px;}
+.mobile-close{width:34px;height:34px;border-radius:50%;background:var(--charcoal-2);display:flex;align-items:center;justify-content:center;}
+.mobile-menu a{
+  display:block;padding:16px 4px;font-size:16px;color:var(--cream);
+  border-bottom:1px solid var(--line);font-weight:500;
+}
+.mobile-menu a:active{color:var(--gold);}
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;
+  opacity:0;pointer-events:none;transition:opacity 0.3s;
+}
+.overlay.open{opacity:1;pointer-events:auto;}
+
+.live-fab{
+  position:fixed;bottom:20px;right:20px;z-index:900;
+  display:flex;flex-direction:column;gap:10px;
+}
+.live-fab a{
+  width:52px;height:52px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 20px rgba(0,0,0,0.5);
+  position:relative;
+}
+.live-fab .fb{background:linear-gradient(135deg,#1E5FBF,#144a99);}
+.live-fab .wa{background:linear-gradient(135deg,#25D366,#1da851);}
+.live-fab svg{width:24px;height:24px;fill:#fff;}
+.pulse-dot{
+  position:absolute;top:-3px;right:-3px;width:14px;height:14px;
+  background:var(--red);border-radius:50%;border:2px solid var(--black);
+}
+.pulse-dot::after{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  background:var(--red);animation:pulse 1.6s infinite;
+}
+@keyframes pulse{
+  0%{transform:scale(1);opacity:0.7;}
+  100%{transform:scale(2.4);opacity:0;}
+}
+
+.hero{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  position:relative;padding:140px 20px 80px;text-align:center;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(200,150,62,0.12), transparent 60%),
+    linear-gradient(180deg, var(--black) 0%, var(--charcoal) 100%);
+  overflow:hidden;
+}
+.ember{
+  position:absolute;bottom:-10%;left:50%;transform:translateX(-50%);
+  width:340px;height:500px;pointer-events:none;opacity:0.55;
+  background:
+    radial-gradient(circle at 50% 100%, rgba(214,46,31,0.35), transparent 55%),
+    radial-gradient(circle at 45% 80%, rgba(245,197,24,0.18), transparent 45%);
+  filter:blur(30px);
+  animation:flicker 5s ease-in-out infinite;
+}
+@keyframes flicker{
+  0%,100%{opacity:0.5;transform:translateX(-50%) scale(1);}
+  50%{opacity:0.7;transform:translateX(-50%) scale(1.05);}
+}
+.hero-content{position:relative;z-index:2;max-width:760px;}
+.hero-logo{width:110px;margin:0 auto 28px;filter:drop-shadow(0 8px 30px rgba(214,46,31,0.25));}
+.hero-eyebrow{
+  font-size:12px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);
+  font-weight:600;margin-bottom:20px;
+}
+.hero h1{
+  font-size:clamp(34px,7vw,58px);line-height:1.12;color:var(--cream);
+  margin-bottom:20px;
+}
+.hero h1 em{font-style:italic;color:var(--gold);}
+.hero-mission{
+  font-family:var(--font-display);font-style:italic;font-size:clamp(16px,2.6vw,20px);
+  color:var(--gold-light);margin-bottom:12px;letter-spacing:0.3px;
+}
+.hero-verse{
+  font-size:14px;color:var(--cream-dim);max-width:480px;margin:0 auto 36px;
+  border-left:2px solid var(--gold);padding-left:14px;text-align:left;
+}
+.hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.hero-loc{
+  margin-top:34px;font-size:12px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--cream-dim);display:flex;align-items:center;gap:8px;justify-content:center;
+}
+.hero-loc svg{width:13px;height:13px;fill:var(--gold);}
+
+.about-grid{
+  display:grid;grid-template-columns:1fr;gap:40px;align-items:start;
+}
+.about-photo-wrap{
+  position:relative;max-width:340px;margin:0 auto;
+}
+.about-photo{
+  width:100%;border-radius:6px;position:relative;z-index:2;
+  filter:grayscale(0.1) contrast(1.05);
+  box-shadow:0 20px 50px rgba(0,0,0,0.5);
+}
+.about-photo-frame{
+  position:absolute;top:16px;left:16px;right:-16px;bottom:-16px;
+  border:1px solid var(--gold);border-radius:6px;z-index:1;
+}
+.about-body{max-width:600px;}
+.about-lead{
+  font-family:var(--font-display);font-size:19px;font-style:italic;
+  color:var(--gold-light);margin-bottom:20px;line-height:1.5;
+}
+.about-body p{color:var(--cream-dim);font-size:15px;margin-bottom:18px;}
+.about-verse{
+  font-family:var(--font-display);font-style:italic;color:var(--gold-light);
+  border-left:2px solid var(--gold);padding-left:16px;font-size:15px;margin-bottom:24px;
+}
+.about-contact{margin-top:8px;}
+
+.devo-card{
+  background:linear-gradient(145deg, var(--charcoal-2), var(--charcoal));
+  border:1px solid var(--line);border-radius:4px;padding:44px 36px;
+  position:relative;overflow:hidden;
+}
+.devo-card::before{
+  content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--gold);
+}
+.devo-date{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.devo-title{font-size:clamp(22px,3.5vw,30px);color:var(--cream);margin-bottom:18px;}
+.devo-verse{
+  font-family:var(--font-display);font-style:italic;font-size:17px;color:var(--gold-light);
+  padding:16px 20px;background:rgba(200,150,62,0.06);border-radius:4px;margin-bottom:22px;
+}
+.devo-verse cite{display:block;font-style:normal;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--cream-dim);margin-top:10px;}
+.devo-body{color:var(--cream-dim);font-size:15.5px;white-space:pre-wrap;}
+.devo-empty{text-align:center;color:var(--cream-dim);padding:40px 0;font-style:italic;}
+
+.plan-box{
+  background:var(--charcoal-2);border:1px solid var(--line);border-radius:4px;
+  padding:36px;text-align:center;
+}
+.plan-day-label{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.plan-day-num{font-family:var(--font-display);font-size:48px;color:var(--cream);margin-bottom:18px;}
+.plan-readings{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:22px;}
+.plan-reading-chip{
+  background:rgba(200,150,62,0.1);border:1px solid var(--line);color:var(--gold-light);
+  padding:9px 16px;border-radius:30px;font-size:13.5px;font-weight:500;
+}
+.plan-nav{display:flex;gap:12px;justify-content:center;align-items:center;flex-wrap:wrap;}
+.plan-jump{
+  background:var(--charcoal);border:1px solid var(--line);color:var(--cream-dim);
+  padding:10px 14px;border-radius:2px;font-size:13px;width:110px;text-align:center;
+}
+.plan-progress{height:3px;background:var(--charcoal);border-radius:2px;margin-top:26px;overflow:hidden;}
+.plan-progress-fill{height:100%;background:var(--gold);transition:width 0.4s;}
+
+.sermon-grid{display:grid;grid-template-columns:1fr;gap:22px;}
+.sermon-card{
+  background:var(--charcoal-2);border:1px solid var(--line);border-radius:4px;overflow:hidden;
+  transition:transform 0.25s, border-color 0.25s;
+}
+.sermon-card:hover{border-color:var(--gold);}
+.sermon-thumb{
+  aspect-ratio:16/9;background:var(--charcoal);position:relative;overflow:hidden;cursor:pointer;
+}
+.sermon-thumb img{width:100%;height:100%;object-fit:cover;}
+.sermon-play{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(13,12,11,0.35);
+}
+.sermon-play svg{width:52px;height:52px;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.5));}
+.sermon-body{padding:20px 22px;}
+.sermon-tag{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.sermon-title{font-size:18px;color:var(--cream);margin-bottom:6px;font-weight:600;font-family:var(--font-display);}
+.sermon-meta{font-size:13px;color:var(--cream-dim);}
+.video-modal{
+  position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:2000;
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+.video-modal.open{display:flex;}
+.video-modal-inner{width:100%;max-width:900px;}
+.video-modal iframe{width:100%;aspect-ratio:16/9;border:none;border-radius:4px;}
+.video-modal-close{
+  color:var(--cream);text-align:right;margin-bottom:10px;font-size:14px;
+  display:flex;justify-content:flex-end;gap:8px;align-items:center;cursor:pointer;
+}
+
+.event-card{
+  display:flex;gap:20px;background:var(--charcoal-2);border:1px solid var(--line);
+  border-radius:4px;padding:22px;margin-bottom:16px;align-items:flex-start;
+}
+.event-date-box{
+  min-width:64px;text-align:center;background:var(--charcoal);border:1px solid var(--gold);
+  border-radius:4px;padding:10px 6px;
+}
+.event-date-box .mon{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);}
+.event-date-box .day{font-family:var(--font-display);font-size:24px;color:var(--cream);}
+.event-body{flex:1;}
+.event-title{font-size:18px;font-weight:600;color:var(--cream);margin-bottom:6px;font-family:var(--font-display);}
+.event-meta{font-size:13px;color:var(--cream-dim);margin-bottom:12px;display:flex;flex-wrap:wrap;gap:14px;}
+.event-meta span{display:flex;align-items:center;gap:5px;}
+.event-meta svg{width:13px;height:13px;fill:var(--gold);}
+.event-desc{font-size:14px;color:var(--cream-dim);margin-bottom:14px;}
+.event-empty, .sermon-empty, .no-events{text-align:center;color:var(--cream-dim);font-style:italic;padding:30px;}
+
+.community-tabs{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap;}
+.community-tab{
+  padding:10px 20px;border-radius:30px;font-size:13px;font-weight:600;
+  background:var(--charcoal-2);color:var(--cream-dim);border:1px solid var(--line);
+  letter-spacing:0.3px;
+}
+.community-tab.active{background:var(--gold);color:var(--black);border-color:var(--gold);}
+.post-form{
+  background:var(--charcoal-2);border:1px solid var(--line);border-radius:4px;
+  padding:24px;margin-bottom:30px;
+}
+.post-form input, .post-form textarea, .post-form select{
+  width:100%;background:var(--charcoal);border:1px solid var(--line);color:var(--cream);
+  padding:13px 14px;border-radius:3px;font-family:inherit;font-size:14px;margin-bottom:12px;
+}
+.post-form textarea{min-height:100px;resize:vertical;}
+.post-form label{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:8px;}
+.wall-post{
+  background:var(--charcoal-2);border:1px solid var(--line);border-radius:4px;
+  padding:20px 22px;margin-bottom:14px;
+}
+.wall-post-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.wall-post-name{font-weight:600;color:var(--gold-light);font-size:14.5px;}
+.wall-post-type{font-size:10.5px;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:20px;}
+.type-prayer{background:rgba(30,95,191,0.15);color:#6fa3f0;}
+.type-testimony{background:rgba(200,150,62,0.15);color:var(--gold-light);}
+.type-word{background:rgba(214,46,31,0.15);color:#f0776c;}
+.wall-post-text{font-size:14.5px;color:var(--cream-dim);}
+.wall-post-time{font-size:11.5px;color:#6b6459;margin-top:10px;}
+
+.give-grid{display:grid;grid-template-columns:1fr;gap:20px;}
+.give-card{
+  background:linear-gradient(145deg, var(--charcoal-2), var(--charcoal));
+  border:1px solid var(--line);border-radius:4px;padding:30px;text-align:center;
+}
+.give-icon{width:44px;height:44px;margin:0 auto 18px;fill:var(--gold);}
+.give-title{font-family:var(--font-display);font-size:19px;color:var(--cream);margin-bottom:10px;}
+.give-desc{font-size:14px;color:var(--cream-dim);margin-bottom:20px;}
+.acct-box{
+  background:var(--charcoal);border:1px solid var(--gold);border-radius:3px;
+  padding:16px;text-align:left;font-size:13.5px;margin-bottom:16px;
+}
+.acct-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);}
+.acct-row:last-child{border-bottom:none;}
+.acct-label{color:var(--cream-dim);}
+.acct-value{color:var(--gold-light);font-weight:600;letter-spacing:0.5px;}
+.copy-btn{
+  background:var(--charcoal-2);border:1px solid var(--gold);color:var(--gold);
+  padding:5px 12px;font-size:11px;border-radius:20px;letter-spacing:0.5px;text-transform:uppercase;
+}
+.copy-btn.copied{background:var(--gold);color:var(--black);}
+
+.install-grid{display:grid;grid-template-columns:1fr;gap:20px;margin-bottom:24px;}
+.install-card{
+  background:var(--charcoal-2);border:1px solid var(--line);border-radius:6px;padding:26px;
+}
+.install-platform{
+  display:flex;align-items:center;gap:12px;margin-bottom:20px;
+  font-family:var(--font-display);font-size:17px;color:var(--gold);font-weight:700;
+}
+.install-icon{width:22px;height:22px;fill:var(--gold);flex-shrink:0;}
+.install-steps{padding-left:20px;}
+.install-steps li{color:var(--cream-dim);font-size:14px;margin-bottom:12px;line-height:1.5;}
+.install-steps strong{color:var(--cream);font-weight:600;}
+.install-note{
+  text-align:center;font-size:13.5px;color:var(--cream-dim);font-style:italic;
+  max-width:560px;margin:0 auto;
+}
+
+footer{background:var(--charcoal);border-top:1px solid var(--line);padding:60px 20px 30px;}
+.footer-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:36px;}
+.footer-brand{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.footer-brand img{height:48px;}
+.footer-brand-text{font-family:var(--font-display);font-weight:700;color:var(--gold);font-size:17px;}
+.footer-mission{font-size:13px;color:var(--cream-dim);font-style:italic;font-family:var(--font-display);}
+.footer-col h4{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+.footer-col a, .footer-col p{display:block;color:var(--cream-dim);font-size:14px;margin-bottom:10px;}
+.footer-social{display:flex;gap:12px;margin-top:16px;}
+.footer-social a{
+  width:38px;height:38px;border-radius:50%;background:var(--charcoal-2);
+  display:flex;align-items:center;justify-content:center;border:1px solid var(--line);
+}
+.footer-social svg{width:16px;height:16px;fill:var(--gold);}
+.footer-bottom{
+  max-width:1100px;margin:40px auto 0;padding-top:24px;border-top:1px solid var(--line);
+  text-align:center;font-size:12.5px;color:#6b6459;
+}
+.footer-bottom a{color:var(--gold);}
+
+.toast{
+  position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);
+  background:var(--gold);color:var(--black);padding:14px 26px;border-radius:30px;
+  font-size:14px;font-weight:600;z-index:3000;transition:transform 0.35s ease;
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease, transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+.reg-modal{
+  position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:2500;
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+.reg-modal.open{display:flex;}
+.reg-modal-box{
+  background:var(--charcoal-2);border:1px solid var(--gold);border-radius:6px;
+  padding:30px 26px;max-width:400px;width:100%;
+}
+.reg-modal-box h3{font-family:var(--font-display);color:var(--gold);font-size:20px;margin-bottom:6px;}
+.reg-modal-box p{font-size:13px;color:var(--cream-dim);margin-bottom:20px;}
+.reg-modal-box input{
+  width:100%;background:var(--charcoal);border:1px solid var(--line);color:var(--cream);
+  padding:13px 14px;border-radius:3px;font-family:inherit;font-size:14px;margin-bottom:12px;
+}
+.reg-modal-actions{display:flex;gap:10px;margin-top:8px;}
+.reg-modal-actions button{flex:1;justify-content:center;padding:12px;}
+
+@media(min-width:820px){
+  .nav-links{display:flex;}
+  .burger{display:none;}
+  .sermon-grid{grid-template-columns:repeat(2,1fr);}
+  .give-grid{grid-template-columns:repeat(3,1fr);}
+  .footer-grid{grid-template-columns:1.4fr 1fr 1fr 1fr;}
+  .about-grid{grid-template-columns:340px 1fr;gap:56px;}
+  .install-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(prefers-reduced-motion: reduce){
+  *{animation:none !important;transition:none !important;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-wrap">
+    <div class="brand">
+      <img src="icon-192.png" alt="Havilah Gospel Ministries logo">
+      <div class="brand-text">HAVILAH<span>GOSPEL MINISTRIES INT'L</span></div>
+    </div>
+    <nav class="nav-links">
+      <a href="#about">About</a>
+      <a href="#devotional">Devotional</a>
+      <a href="#bible-plan">Bible Plan</a>
+      <a href="#sermons">Sermons</a>
+      <a href="#events">Events</a>
+      <a href="#community">Community</a>
+      <a href="#give">Give</a>
+      <a href="#install">Install App</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="admin.html" class="icon-btn" title="Admin">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#C8963E" stroke-width="2"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      </a>
+      <button class="burger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-header">
+    <div class="brand-text">MENU</div>
+    <div class="mobile-close" onclick="toggleMenu()">✕</div>
+  </div>
+  <a href="#about" onclick="toggleMenu()">About Pastor Ben</a>
+  <a href="#devotional" onclick="toggleMenu()">Devotional</a>
+  <a href="#bible-plan" onclick="toggleMenu()">Bible Reading Plan</a>
+  <a href="#sermons" onclick="toggleMenu()">Sermons &amp; Teaching</a>
+  <a href="#events" onclick="toggleMenu()">Programs &amp; Events</a>
+  <a href="#community" onclick="toggleMenu()">Community</a>
+  <a href="#give" onclick="toggleMenu()">Give &amp; Partner</a>
+  <a href="#install" onclick="toggleMenu()">Install App</a>
+  <a href="#contact" onclick="toggleMenu()">Contact</a>
+  <a href="admin.html">Admin Dashboard</a>
+</div>
+
+<div class="live-fab">
+  <a class="fb" href="https://facebook.com/groups/3670592466529950/" target="_blank" rel="noopener" title="Join us live on Facebook">
+    <span class="pulse-dot"></span>
+    <svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/></svg>
+  </a>
+  <a class="wa" href="https://wa.me/2348168629983" target="_blank" rel="noopener" title="Message us on WhatsApp">
+    <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-8.5 15.2L2 22l4.9-1.5A10 10 0 1012 2zm5.7 14.2c-.2.7-1.4 1.3-1.9 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3s.7-2.2 1-2.5c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5-.1.2-.3.4-.4.5-.1.1-.3.3-.1.6.2.3.9 1.5 1.9 2.4 1.3 1.2 2.4 1.5 2.7 1.7.3.2.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.8.8.3.1.5.2.5.3.1.3.1.7-.1 1.2z"/></svg>
+  </a>
+</div>
+
+<section class="hero">
+  <div class="ember"></div>
+  <div class="hero-content">
+    <img src="icon-192.png" class="hero-logo" alt="Havilah Gospel Ministries">
+    <div class="hero-eyebrow">Pastor Ben Idowu &nbsp;•&nbsp; Ilorin, Kwara State</div>
+    <h1>Welcome to <em>Havilah</em><br>Gospel Ministries Int'l</h1>
+    <p class="hero-mission">"Elevation Destinies Unto Divine Fulfillment"</p>
+    <p class="hero-verse">"And the gold of that land is good: there is bdellium and the onyx stone." — Genesis 2:11 (KJV)</p>
+    <div class="hero-actions">
+      <a href="#devotional" class="btn btn-gold">Today's Devotional</a>
+      <a href="#give" class="btn btn-outline">Partner With Us</a>
+    </div>
+    <div class="hero-loc">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1112 6.5a2.5 2.5 0 010 5z"/></svg>
+      Ilorin, Kwara State, Nigeria
+    </div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="section-inner reveal">
+    <div class="eyebrow">Meet The Man Of God</div>
+    <h2 class="section-title">Pastor Ben Idowu</h2>
+    <p class="section-sub">The visionary and lead pastor of Havilah Gospel Ministries International.</p>
+    <div class="about-grid">
+      <div class="about-photo-wrap">
+        <img src="pastor-ben.jpg" alt="Pastor Ben Idowu" class="about-photo">
+        <div class="about-photo-frame"></div>
+      </div>
+      <div class="about-body">
+        <p class="about-lead">Pastor Ben Idowu is a man raised by God with a burning passion to see destinies elevated unto divine fulfillment.</p>
+        <p>Through prophetic insight, sound teaching, and a shepherd's heart, he leads Havilah Gospel Ministries International with a clear mandate to see lives transformed, families restored, and believers positioned for their God-ordained purpose. His ministry is marked by a deep commitment to the word of God and a genuine love for the people he serves.</p>
+        <p>He is happily married to Pastor Mrs Bola Idowu, and together their union has been blessed with beautiful children. Their home stands as a living testimony of the covenant faithfulness they preach, and Pastor Mrs Bola Idowu labors alongside him as a true partner in ministry.</p>
+        <p class="about-verse">"And I will give you pastors according to mine heart, which shall feed you with knowledge and understanding." — Jeremiah 3:15 (KJV)</p>
+        <div class="about-contact">
+          <a href="https://wa.me/2348168629983" target="_blank" class="btn btn-outline">Message Pastor Ben</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="devotional">
+  <div class="section-inner reveal">
+    <div class="eyebrow">Daily Bread</div>
+    <h2 class="section-title">Today's Devotional</h2>
+    <p class="section-sub">A fresh word from Pastor Ben Idowu, uploaded every morning to strengthen you for the day.</p>
+    <div id="devoContainer"><div class="devo-card"><p class="devo-empty">Loading...</p></div></div>
+  </div>
+</section>
+
+<section class="section" id="bible-plan" style="background:var(--charcoal);">
+  <div class="section-inner reveal">
+    <div class="eyebrow">Walk In The Word</div>
+    <h2 class="section-title">One Year Bible Reading Plan</h2>
+    <p class="section-sub">Read through the entire Bible in 365 days. Track your progress day by day.</p>
+    <div class="plan-box">
+      <div class="plan-day-label">Day</div>
+      <div class="plan-day-num" id="planDayNum">1</div>
+      <div class="plan-readings" id="planReadings"></div>
+      <div class="plan-nav">
+        <button class="btn btn-outline" onclick="planPrev()" style="padding:10px 18px;">‹ Prev</button>
+        <input type="number" id="planJump" class="plan-jump" min="1" max="365" placeholder="Go to day">
+        <button class="btn btn-outline" onclick="planJumpTo()" style="padding:10px 18px;">Go</button>
+        <button class="btn btn-gold" onclick="planNext()" style="padding:10px 18px;">Next ›</button>
+      </div>
+      <div class="plan-progress"><div class="plan-progress-fill" id="planProgressFill"></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="sermons">
+  <div class="section-inner reveal">
+    <div class="eyebrow">Sound Doctrine</div>
+    <h2 class="section-title">Sermons &amp; Teaching</h2>
+    <p class="section-sub">Messages from Pastor Ben Idowu to build your faith and renew your mind.</p>
+    <div class="sermon-grid" id="sermonGrid"><p class="sermon-empty">Loading...</p></div>
+  </div>
+</section>
+
+<section class="section" id="events" style="background:var(--charcoal);">
+  <div class="section-inner reveal">
+    <div class="eyebrow">Set Times</div>
+    <h2 class="section-title">Programs &amp; Events</h2>
+    <p class="section-sub">Join us for upcoming programs. Register below to secure your spot.</p>
+    <div id="eventsContainer"><p class="event-empty">Loading...</p></div>
+  </div>
+</section>
+
+<section class="section" id="community">
+  <div class="section-inner reveal">
+    <div class="eyebrow">One Body</div>
+    <h2 class="section-title">Community</h2>
+    <p class="section-sub">Share your prayer request, testimony, or a word the Lord has given you.</p>
+
+    <div class="post-form">
+      <label>Your Name</label>
+      <input type="text" id="postName" placeholder="Enter your name" maxlength="60">
+      <label>Type</label>
+      <select id="postType">
+        <option value="prayer">Prayer Request</option>
+        <option value="testimony">Testimony</option>
+        <option value="word">A Word</option>
+      </select>
+      <label>Message</label>
+      <textarea id="postMessage" placeholder="Share what's on your heart..." maxlength="600"></textarea>
+      <button class="btn btn-gold" onclick="submitPost()" style="width:100%;justify-content:center;" id="postSubmitBtn">Post to Community</button>
+    </div>
+
+    <div class="community-tabs">
+      <button class="community-tab active" data-filter="all" onclick="filterWall('all', this)">All</button>
+      <button class="community-tab" data-filter="prayer" onclick="filterWall('prayer', this)">Prayer Requests</button>
+      <button class="community-tab" data-filter="testimony" onclick="filterWall('testimony', this)">Testimonies</button>
+      <button class="community-tab" data-filter="word" onclick="filterWall('word', this)">Words</button>
+    </div>
+    <div id="wallContainer"><p class="no-events">Loading...</p></div>
+  </div>
+</section>
+
+<section class="section" id="give" style="background:var(--charcoal);">
+  <div class="section-inner reveal">
+    <div class="eyebrow">Sow &amp; Reap</div>
+    <h2 class="section-title">Give &amp; Partner With Us</h2>
+    <p class="section-sub">"Give, and it shall be given unto you." — Luke 6:38 (KJV). Sow your seed and partner with the vision of Havilah Gospel Ministries.</p>
+
+    <div class="give-grid">
+      <div class="give-card">
+        <svg class="give-icon" viewBox="0 0 24 24"><path d="M12 2l3 6 6.5 1-4.7 4.6L18 20l-6-3.4L6 20l1.2-6.4L2.5 9l6.5-1z"/></svg>
+        <div class="give-title">Sow a Seed</div>
+        <div class="give-desc">Sow into the vision and receive your harvest.</div>
+        <div class="acct-box">
+          <div class="acct-row"><span class="acct-label">Bank</span><span class="acct-value">OPAY</span></div>
+          <div class="acct-row"><span class="acct-label">Account No.</span><span class="acct-value" id="acct1">9016062232</span></div>
+          <div class="acct-row"><span class="acct-label">Name</span><span class="acct-value">Benjamin Abayomi Idowu</span></div>
+        </div>
+        <button class="copy-btn" onclick="copyAccount('acct1', this)">Copy Account Number</button>
+      </div>
+      <div class="give-card">
+        <svg class="give-icon" viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-10-9.2C.5 8 2 4 6 4c2 0 3.4 1 4 2.3C10.6 5 12 4 14 4c4 0 5.5 4 4 7.8-2.5 4.6-10 9.2-10 9.2z"/></svg>
+        <div class="give-title">Partnership</div>
+        <div class="give-desc">Become a covenant partner supporting the work of the ministry monthly.</div>
+        <a href="https://wa.me/2348168629983?text=I%20would%20like%20to%20become%20a%20partner%20with%20Havilah%20Gospel%20Ministries" class="btn btn-outline" target="_blank" style="width:100%;justify-content:center;">Message on WhatsApp</a>
+      </div>
+      <div class="give-card">
+        <svg class="give-icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <div class="give-title">Special Offering</div>
+        <div class="give-desc">Give towards a specific program, project, or missions outreach.</div>
+        <div class="acct-box">
+          <div class="acct-row"><span class="acct-label">Bank</span><span class="acct-value">OPAY</span></div>
+          <div class="acct-row"><span class="acct-label">Account No.</span><span class="acct-value" id="acct2">9016062232</span></div>
+        </div>
+        <button class="copy-btn" onclick="copyAccount('acct2', this)">Copy Account Number</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="install" style="background:var(--charcoal);">
+  <div class="section-inner reveal">
+    <div class="eyebrow">Take It With You</div>
+    <h2 class="section-title">Install This App On Your Phone</h2>
+    <p class="section-sub">Add Havilah Gospel Ministries to your home screen for quick access, just like any other app — no app store needed.</p>
+
+    <div class="install-grid">
+      <div class="install-card">
+        <div class="install-platform">
+          <svg viewBox="0 0 24 24" class="install-icon"><path d="M17.5 2h-11A2.5 2.5 0 004 4.5v15A2.5 2.5 0 006.5 22h11a2.5 2.5 0 002.5-2.5v-15A2.5 2.5 0 0017.5 2zm-5.5 19a1 1 0 110-2 1 1 0 010 2zM6 17h12V4H6v13z"/></svg>
+          <span>Android (Chrome)</span>
+        </div>
+        <ol class="install-steps">
+          <li>Open this website in <strong>Chrome</strong></li>
+          <li>Tap the <strong>three-dot menu</strong> (top right)</li>
+          <li>Tap <strong>"Add to Home screen"</strong> or <strong>"Install app"</strong></li>
+          <li>Tap <strong>"Add"</strong> or <strong>"Install"</strong> to confirm</li>
+          <li>The Havilah icon will appear on your home screen</li>
+        </ol>
+      </div>
+
+      <div class="install-card">
+        <div class="install-platform">
+          <svg viewBox="0 0 24 24" class="install-icon"><path d="M17.5 2h-11A2.5 2.5 0 004 4.5v15A2.5 2.5 0 006.5 22h11a2.5 2.5 0 002.5-2.5v-15A2.5 2.5 0 0017.5 2zm-5.5 19a1 1 0 110-2 1 1 0 010 2zM6 17h12V4H6v13z"/></svg>
+          <span>iPhone (Safari)</span>
+        </div>
+        <ol class="install-steps">
+          <li>Open this website in <strong>Safari</strong></li>
+          <li>Tap the <strong>Share icon</strong> (square with an arrow, at the bottom)</li>
+          <li>Scroll down and tap <strong>"Add to Home Screen"</strong></li>
+          <li>Tap <strong>"Add"</strong> at the top right to confirm</li>
+          <li>The Havilah icon will appear on your home screen</li>
+        </ol>
+      </div>
+    </div>
+    <p class="install-note">Once installed, the app opens full-screen — just like a regular app — and you'll always have the latest devotional, sermons, and events right at your fingertips.</p>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">
+        <img src="icon-192.png" alt="logo">
+        <div class="footer-brand-text">HAVILAH GOSPEL<br>MINISTRIES INT'L</div>
+      </div>
+      <p class="footer-mission">"Elevation Destinies Unto Divine Fulfillment"</p>
+      <div class="footer-social">
+        <a href="https://youtube.com/@idowubenjamin-e1d?si=GnVsVeACR8C7Uea_" target="_blank" rel="noopener" title="YouTube"><svg viewBox="0 0 24 24"><path d="M23 12s0-3.4-.4-5c-.3-1-1-1.7-2-2C18.9 4.5 12 4.5 12 4.5s-6.9 0-8.6.5c-1 .3-1.7 1-2 2C1 8.6 1 12 1 12s0 3.4.4 5c.3 1 1 1.7 2 2 1.7.5 8.6.5 8.6.5s6.9 0 8.6-.5c1-.3 1.7-1 2-2 .4-1.6.4-5 .4-5zM10 15.5v-7l6 3.5-6 3.5z"/></svg></a>
+        <a href="https://facebook.com/groups/3670592466529950/" target="_blank" rel="noopener" title="Facebook"><svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/></svg></a>
+        <a href="https://wa.me/2348168629983" target="_blank" rel="noopener" title="WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-8.5 15.2L2 22l4.9-1.5A10 10 0 1012 2zm5.7 14.2c-.2.7-1.4 1.3-1.9 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3s.7-2.2 1-2.5c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5-.1.2-.3.4-.4.5-.1.1-.3.3-.1.6.2.3.9 1.5 1.9 2.4 1.3 1.2 2.4 1.5 2.7 1.7.3.2.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.8.8.3.1.5.2.5.3.1.3.1.7-.1 1.2z"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <a href="#devotional">Daily Devotional</a>
+      <a href="#bible-plan">Bible Reading Plan</a>
+      <a href="#sermons">Sermons</a>
+      <a href="#events">Events</a>
+      <a href="#community">Community</a>
+    </div>
+    <div class="footer-col">
+      <h4>Ministry</h4>
+      <p>Pastor Ben Idowu</p>
+      <p>Ilorin, Kwara State,<br>Nigeria</p>
+      <a href="#give">Give &amp; Partner</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="mailto:pstbenidowu@gmail.com">pstbenidowu@gmail.com</a>
+      <a href="https://wa.me/2348168629983" target="_blank">+234 816 862 9983</a>
+      <a href="admin.html">Admin Dashboard</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    &copy; <span id="year"></span> Havilah Gospel Ministries International. All Rights Reserved.<br>
+    Built with faith for the Kingdom.
+  </div>
+</footer>
+
+<div class="video-modal" id="videoModal">
+  <div class="video-modal-inner">
+    <div class="video-modal-close" onclick="closeVideo()">Close ✕</div>
+    <div id="videoFrameWrap"></div>
+  </div>
+</div>
+
+<div class="reg-modal" id="regModal">
+  <div class="reg-modal-box">
+    <h3 id="regModalTitle">Register</h3>
+    <p id="regModalEventName"></p>
+    <input type="text" id="regName" placeholder="Your full name">
+    <input type="tel" id="regPhone" placeholder="Your phone number">
+    <div class="reg-modal-actions">
+      <button class="btn btn-outline" onclick="closeRegister()">Cancel</button>
+      <button class="btn btn-gold" onclick="confirmRegister()">Register</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
